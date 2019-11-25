@@ -10,6 +10,11 @@ import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.DryRunResult;
 import com.amazonaws.services.ec2.model.StartInstancesRequest;
+import java.lang.NullPointerException;
+import java.lang.*;
+import com.amazonaws.services.ec2.model.DryRunSupportedRequest;
+import com.amazonaws.services.ec2.model.StartInstancesRequest;
+import com.amazonaws.services.ec2.model.StopInstancesRequest;
 public class awsTest {
 /*
 * Cloud Computing, Data Computing Laboratory
@@ -72,8 +77,8 @@ listInstances();
 break;
 
 case 3:
-listInstances();
-System.out.println(" enter the instance id you want to start");
+
+System.out.println("Enter the instance id: ");
 id= id_string.nextLine();
 startInstance(id);
 break;
@@ -83,6 +88,7 @@ break;
 }
 }
 public static void listInstances(){
+	System.out.println("");
 	System.out.println("Listing instances....");
 	boolean done = false;
 	DescribeInstancesRequest request = new DescribeInstancesRequest();
@@ -114,9 +120,37 @@ public static void listInstances(){
 public static void startInstance(String instance_name){ //start instance
   final AmazonEC2 new_ec2= AmazonEC2ClientBuilder.defaultClient();
   
-  StartInstancesRequest request = new StartInstancesRequest().withInstanceIds(instance_name); //start instance that user put id
-  ec2.startInstances(request);
-   
+       
+	 System.out.printf(
+                "Starting .... %s", instance_name);
+
+	DryRunSupportedRequest<StartInstancesRequest> dry_request =
+            () -> {
+             StartInstancesRequest request = new StartInstancesRequest()
+                .withInstanceIds(instance_name);
+
+            return request.getDryRunRequest();
+        };
+	// the original request of the dry run
+        DryRunResult dry_response = ec2.dryRun(dry_request);
+	
+        if(!dry_response.isSuccessful()) {// if dry-run was not succeessful
+            System.out.printf(
+                "Failed dry run to start instance %s", instance_name);
+
+            throw dry_response.getDryRunResponse(); 
+        }//        //start instance that user put id 
+
+        StartInstancesRequest request = new StartInstancesRequest()
+            .withInstanceIds(instance_name);
+
+        ec2.startInstances(request);
+
+        System.out.printf("Successfully started instance %s", instance_name);
+    }	
+
+
+      
  
 
 
@@ -124,4 +158,4 @@ public static void startInstance(String instance_name){ //start instance
 
 
 }
-}
+

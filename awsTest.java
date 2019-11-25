@@ -8,6 +8,8 @@ import java.util.*;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.DryRunResult;
+import com.amazonaws.services.ec2.model.StartInstancesRequest;
 public class awsTest {
 /*
 * Cloud Computing, Data Computing Laboratory
@@ -43,6 +45,7 @@ init();
 Scanner menu = new Scanner(System.in);
 Scanner id_string = new Scanner(System.in);
 int number = 0;
+String id="0";
 while(true)
 {
 System.out.println(" ");
@@ -64,7 +67,15 @@ number=menu.nextInt();
 switch(number) {
 case 1:
 
+
 listInstances();
+break;
+
+case 3:
+listInstances();
+System.out.println(" enter the instance id you want to start");
+id= id_string.nextLine();
+startInstance(id);
 break;
 
 //<생략>
@@ -98,5 +109,19 @@ public static void listInstances(){
 	done = true;
 	}
 	}
+}
+
+public static void startInstance(String instance_name){ //start instance
+  final AmazonEC2 new_ec2= AmazonEC2ClientBuilder.defaultClient();
+  
+  StartInstancesRequest request = new StartInstancesRequest().withInstanceIds(instance_name); //start instance that user put id
+  ec2.startInstances(request);
+   
+ 
+
+
+
+
+
 }
 }

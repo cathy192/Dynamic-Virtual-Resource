@@ -83,7 +83,18 @@ id= id_string.nextLine();
 startInstance(id);
 break;
 
-//<생략>
+
+case 5:
+
+System.out.println("Enter the instance id: ");
+id= id_string.nextLine();
+stopInstance(id);
+break;
+
+default:
+
+System.out.println("Please enter right number of menu");
+break;
 }
 }
 }
@@ -149,10 +160,35 @@ public static void startInstance(String instance_name){ //start instance
         System.out.printf("Successfully started instance %s", instance_name);
     }	
 
+public static void stopInstance(String instance_name){//stop instance
 
+final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
+
+        DryRunSupportedRequest<StopInstancesRequest> dry_request =
+            () -> {
+            StopInstancesRequest request = new StopInstancesRequest()
+                .withInstanceIds(instance_name);
+
+            return request.getDryRunRequest();
+        };
+
+        DryRunResult dry_response = ec2.dryRun(dry_request);
+
+        if(!dry_response.isSuccessful()) {
+            System.out.printf(
+                "Failed dry run to stop instance %s", instance_name);
+            throw dry_response.getDryRunResponse();
+        }
+
+        StopInstancesRequest request = new StopInstancesRequest()
+            .withInstanceIds(instance_name);
+
+        ec2.stopInstances(request);
+
+        System.out.printf("Successfully stop instance %s", instance_name);
       
  
-
+}
 
 
 

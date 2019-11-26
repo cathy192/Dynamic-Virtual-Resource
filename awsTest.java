@@ -50,8 +50,9 @@ init();
 Scanner menu = new Scanner(System.in);
 Scanner id_string = new Scanner(System.in);
 int number = 0;
+boolean loop=true;
 String id="0";
-while(true)
+while(loop)
 {
 System.out.println(" ");
 System.out.println(" ");
@@ -89,6 +90,11 @@ case 5:
 System.out.println("Enter the instance id: ");
 id= id_string.nextLine();
 stopInstance(id);
+break;
+
+case 99:
+System.out.println("end the Amazon AWS Control");
+loop=false;
 break;
 
 default:

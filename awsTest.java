@@ -27,6 +27,9 @@ import com.amazonaws.services.ec2.model.AvailabilityZone;
 import com.amazonaws.services.ec2.model.DescribeAvailabilityZonesResult;
 import com.amazonaws.services.ec2.model.DescribeRegionsResult;
 import com.amazonaws.services.ec2.model.Region;
+import com.amazonaws.services.ec2.model.RebootInstancesRequest;
+import com.amazonaws.services.ec2.model.RebootInstancesResult;
+
 public class awsTest {
 	/*
 	 * Cloud Computing, Data Computing Laboratory
@@ -113,7 +116,11 @@ public class awsTest {
 					System.out.print("Enter the ami id: ");
 					createInstance();
 					break;
-
+				
+				case 7:
+					System.out.print("Enter the instance id:");
+					id=id_string.nextLine();
+					rebootInstance(id);
 				case 99:
 					System.out.println("end the Amazon AWS Control");
 					loop=false;
@@ -219,7 +226,7 @@ public class awsTest {
 	}
 
 	public static void createInstance(){ //create instance;
-		/*	Scanner id_string = new Scanner(System.in);
+			Scanner id_string = new Scanner(System.in);
 			String ami_id;
 			String reservation_id="0";
 			ami_id= id_string.nextLine();
@@ -247,7 +254,7 @@ public class awsTest {
 		System.out.printf(
 		"Successfully started EC2 instance %s based on AMI %s", reservation_id, ami_id);
 
-		 */	}
+		 	}
 
 	public static void listZones(){
 		final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
@@ -285,4 +292,25 @@ public class awsTest {
 		}
 
 	}
+
+	public static void rebootInstance(String instance_id){
+
+	  final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
+
+        RebootInstancesRequest request = new RebootInstancesRequest()
+            .withInstanceIds(instance_id);
+
+        RebootInstancesResult response = ec2.rebootInstances(request);
+
+        System.out.printf(
+            "Successfully rebooted instance %s", instance_id);
+
+
+	}
+
+
+
+
+			
 }
+

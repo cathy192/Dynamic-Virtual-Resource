@@ -15,6 +15,16 @@ import java.lang.*;
 import com.amazonaws.services.ec2.model.DryRunSupportedRequest;
 import com.amazonaws.services.ec2.model.StartInstancesRequest;
 import com.amazonaws.services.ec2.model.StopInstancesRequest;
+import com.amazonaws.services.ec2.model.InstanceType;
+import com.amazonaws.services.ec2.model.RunInstancesRequest;
+import com.amazonaws.services.ec2.model.RunInstancesResult;
+import com.amazonaws.services.ec2.model.Tag;
+import com.amazonaws.services.ec2.model.CreateTagsRequest;
+import com.amazonaws.services.ec2.model.CreateTagsResult;
+import com.amazonaws.services.ec2.model.DescribeRegionsResult;
+import com.amazonaws.services.ec2.model.Region;
+import com.amazonaws.services.ec2.model.AvailabilityZone;
+import com.amazonaws.services.ec2.model.DescribeAvailabilityZonesResult;
 public class awsTest {
 /*
 * Cloud Computing, Data Computing Laboratory
@@ -73,10 +83,12 @@ number=menu.nextInt();
 switch(number) {
 case 1:
 
-
 listInstances();
 break;
 
+case 2:
+listZones();
+break;
 case 3:
 
 System.out.println("Enter the instance id: ");
@@ -90,6 +102,11 @@ case 5:
 System.out.println("Enter the instance id: ");
 id= id_string.nextLine();
 stopInstance(id);
+break;
+
+case 6:
+System.out.print("Enter the ami id: ");
+createInstance();
 break;
 
 case 99:
@@ -195,6 +212,58 @@ final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
       
  
 }
+
+public static void createInstance(){ //create instance;
+/*	Scanner id_string = new Scanner(System.in);
+	String ami_id;
+	String reservation_id="0";
+	ami_id= id_string.nextLine();
+	final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
+	
+        RunInstancesRequest run_request = new RunInstancesRequest()
+            .withImageId(ami_id)
+            .withInstanceType(InstanceType.T2Micro)
+            .withMaxCount(1)
+            .withMinCount(1);
+
+        RunInstancesResult run_response = ec2.runInstances(run_request);
+
+        reservation_id = run_response.getReservation().getInstances().get(0).getInstanceId();
+
+//	throw new AmazonClientException(
+//	"fail to create instance",e);
+//	System.out.println("error");
+
+	
+// RunInstancesResult run_response = ec2.runInstances(run_request);
+//
+  //       reservation_id = run_response.getReservation().getInstances().get(0).getInstanceId();
+
+	System.out.printf(
+            "Successfully started EC2 instance %s based on AMI %s", reservation_id, ami_id);
+   
+ */	}
+
+public static void listZones(){
+ final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
+
+        System.out.println("Available zones..");
+        DescribeAvailabilityZonesResult zones_response =
+            ec2.describeAvailabilityZones();
+
+        for(AvailabilityZone zone : zones_response.getAvailabilityZones()) {
+            System.out.printf(
+		"[id] 	%s ,"+
+		"[region]	%s, "+
+		"[zone]	%s",
+		zone.getZoneId(),
+                zone.getRegionName(),
+                zone.getZoneName());
+		System.out.println();    
+    }
+    }
+
+
 
 
 

@@ -1,3 +1,4 @@
+import com.amazonaws.services.ec2.model.DescribeImagesRequest;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.lambda.invoke.LambdaInvokerFactory;
 import com.amazonaws.AmazonClientException;
@@ -28,8 +29,11 @@ import com.amazonaws.services.ec2.model.DescribeAvailabilityZonesResult;
 import com.amazonaws.services.ec2.model.DescribeRegionsResult;
 import com.amazonaws.services.ec2.model.Region;
 import com.amazonaws.services.ec2.model.RebootInstancesRequest;
+import com.amazonaws.services.ec2.model.Image;
 import com.amazonaws.services.ec2.model.RebootInstancesResult;
-
+import com.amazonaws.services.ec2.model.DescribeImagesResult;
+import com.amazonaws.services.ec2.model.DescribeImageAttributeRequest;
+import com.amazonaws.services.ec2.model.DescribeImagesResult;
 public class awsTest {
 	/*
 	 * Cloud Computing, Data Computing Laboratory
@@ -121,6 +125,10 @@ public class awsTest {
 					System.out.print("Enter the instance id:");
 					id=id_string.nextLine();
 					rebootInstance(id);
+					break;
+				case 8:
+					listImage();
+					break;
 				case 99:
 					System.out.println("end the Amazon AWS Control");
 					loop=false;
@@ -309,7 +317,26 @@ public class awsTest {
 	}
 
 
+	public static void listImage(){
 
+	System.out.println("Listing Images.....");
+	DescribeImagesRequest request=new DescribeImagesRequest(); 
+//	final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
+	request.withOwners("self");
+ 	DescribeImagesResult image_list=ec2.describeImages(request);
+	for(Image image : image_list.getImages()){
+			System.out.printf(
+				"[ImageID]  %s,	"+
+				"[Name]  %s,	"+
+				"[Owner]  %s,	",
+				image.getImageId(),
+				image.getName(),
+				image.getOwnerId());
+			System.out.println();
+			}
+			}
+	
+      
 
 			
 }

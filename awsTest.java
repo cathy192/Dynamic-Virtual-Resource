@@ -34,6 +34,10 @@ import com.amazonaws.services.ec2.model.RebootInstancesResult;
 import com.amazonaws.services.ec2.model.DescribeImagesResult;
 import com.amazonaws.services.ec2.model.DescribeImageAttributeRequest;
 import com.amazonaws.services.ec2.model.DescribeImagesResult;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
+import com.amazonaws.services.ec2.model.MonitorInstancesRequest;
+import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.Reservation;
 public class awsTest {
 	/*
 	 * Cloud Computing, Data Computing Laboratory
@@ -85,6 +89,8 @@ public class awsTest {
 			System.out.println(" 3. start instance 4. available regions ");
 			System.out.println(" 5. stop instance 6. create instance ");
 			System.out.println(" 7. reboot instance 8. list images ");
+		        System.out.println(" 9. monitoring instance  ");
+
 			System.out.println(" 99. quit ");
 			System.out.println("------------------------------------------------------------");
 			System.out.print("Enter an integer: ");
@@ -129,6 +135,13 @@ public class awsTest {
 				case 8:
 					listImage();
 					break;
+
+				case 9:
+					System.out.print("Enter the instance id:");
+                                        id=id_string.nextLine();
+					monitorInstance(id);
+					break;
+
 				case 99:
 					System.out.println("end the Amazon AWS Control");
 					loop=false;
@@ -337,7 +350,43 @@ public class awsTest {
 			}
 	
       
+	
+	public static void monitorInstance(String instance_id){
 
+	DryRunSupportedRequest<MonitorInstancesRequest> dry_request =
+            () -> {
+            MonitorInstancesRequest request = new MonitorInstancesRequest()
+                .withInstanceIds(instance_id);
+
+            return request.getDryRunRequest();
+        };
+
+        DryRunResult dry_response = ec2.dryRun(dry_request);
+
+        if (!dry_response.isSuccessful()) {
+            System.out.printf(
+                "Failed dry run to enable monitoring on instance %s",
+                instance_id);
+
+            throw dry_response.getDryRunResponse();
+        }
+
+        MonitorInstancesRequest request = new MonitorInstancesRequest()
+                .withInstanceIds(instance_id);
+
+        ec2.monitorInstances(request);
+
+        System.out.printf(
+            "Successfully enabled monitoring for instance %s",
+            instance_id);
+    }
+
+
+
+
+
+
+	
 			
 }
 

@@ -43,7 +43,8 @@ import com.amazonaws.services.ec2.model.AllocateAddressResult;
 import com.amazonaws.services.ec2.model.AssociateAddressRequest;
 import com.amazonaws.services.ec2.model.AssociateAddressResult;
 import com.amazonaws.services.ec2.model.DomainType;
-
+import com.amazonaws.services.ec2.model.ReleaseAddressRequest;
+import com.amazonaws.services.ec2.model.ReleaseAddressResult;
 import com.amazonaws.services.ec2.model.Address;
 import com.amazonaws.services.ec2.model.DescribeAddressesResult;
 import com.amazonaws.services.ec2.model.UnmonitorInstancesRequest;
@@ -99,7 +100,8 @@ public class awsTest {
 			System.out.println(" 5. stop instance 6. create instance ");
 			System.out.println(" 7. reboot instance 8. list images ");
 		        System.out.println(" 9. monitoring instance 10. unmonitoring instance ");
-                        System.out.println(" 11.Associate Address   12. Describe Address");
+                        System.out.println(" 11. Associate Address   12. Describe Address");
+                        System.out.println(" 13. Release Address");
 
 
 			System.out.println(" 99. quit ");
@@ -165,6 +167,12 @@ public class awsTest {
 					break;
 				case 12:
 					describeAddress();
+					break;
+		
+				case 13:
+					System.out.print("Enter the address id:");
+                                        id=id_string.nextLine();
+					releaseAddress(id);
 					break;
 				case 99:
 					System.out.println("end the Amazon AWS Control");
@@ -478,12 +486,24 @@ public class awsTest {
             address.getDomain(),
             address.getAllocationId(),
             address.getNetworkInterfaceId());
-}
+	    }
 
 
-}
+	}	
+
+	public static void releaseAddress(String alloc_id){
+
+	ReleaseAddressRequest request = new ReleaseAddressRequest()
+            .withAllocationId(alloc_id);
+
+        ReleaseAddressResult response = ec2.releaseAddress(request);
+
+        System.out.printf(
+            "Successfully released elastic IP address %s", alloc_id);
+    }
 
 
+	
 
 
 

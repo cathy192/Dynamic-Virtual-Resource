@@ -38,6 +38,11 @@ import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.MonitorInstancesRequest;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Reservation;
+import com.amazonaws.services.ec2.model.AllocateAddressRequest;
+import com.amazonaws.services.ec2.model.AllocateAddressResult;
+import com.amazonaws.services.ec2.model.AssociateAddressRequest;
+import com.amazonaws.services.ec2.model.AssociateAddressResult;
+import com.amazonaws.services.ec2.model.DomainType;
 import com.amazonaws.services.ec2.model.UnmonitorInstancesRequest;
 public class awsTest {
 	/*
@@ -91,6 +96,8 @@ public class awsTest {
 			System.out.println(" 5. stop instance 6. create instance ");
 			System.out.println(" 7. reboot instance 8. list images ");
 		        System.out.println(" 9. monitoring instance 10. unmonitoring instance ");
+                        System.out.println(" 11.AssociateAddress ");
+
 
 			System.out.println(" 99. quit ");
 			System.out.println("------------------------------------------------------------");
@@ -148,7 +155,11 @@ public class awsTest {
                                         unmonitorInstance(id);
                                         break;
 
-
+				case 11:
+					System.out.print("Enter the instance id:");
+                                        id=id_string.nextLine();
+					allocateAddress(id);
+					break;
 				case 99:
 					System.out.println("end the Amazon AWS Control");
 					loop=false;
@@ -422,7 +433,39 @@ public class awsTest {
 		}
 
 
+	public static void allocateAddress(String instance_id){
 
+  	AllocateAddressRequest allocate_request = new AllocateAddressRequest()
+            .withDomain(DomainType.Vpc);
+
+        AllocateAddressResult allocate_response =
+            ec2.allocateAddress(allocate_request);
+
+        String allocation_id = allocate_response.getAllocationId();
+
+        AssociateAddressRequest associate_request =
+            new AssociateAddressRequest()
+                .withInstanceId(instance_id)
+                .withAllocationId(allocation_id);
+
+        AssociateAddressResult associate_response =
+            ec2.associateAddress(associate_request);
+
+        System.out.printf(
+            "Successfully associated Elastic IP address %s " +
+            "with instance %s",
+            associate_response.getAssociationId(),
+            instance_id);
+    }			
+
+
+
+
+
+
+
+
+	
 	
 			
 }

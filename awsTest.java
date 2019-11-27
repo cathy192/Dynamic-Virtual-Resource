@@ -7,6 +7,13 @@ import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.Reservation;
 import java.util.*;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
+import com.amazonaws.services.ec2.model.CreateSecurityGroupResult;
+import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
+import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressResult;
+import com.amazonaws.services.ec2.model.IpPermission;
+import com.amazonaws.services.ec2.model.IpRange;
+
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.DryRunResult;
@@ -49,6 +56,11 @@ import com.amazonaws.services.ec2.model.DeleteKeyPairResult;
 import com.amazonaws.services.ec2.model.CreateKeyPairRequest;
 import com.amazonaws.services.ec2.model.CreateKeyPairResult;
 import com.amazonaws.services.ec2.model.DomainType;
+import com.amazonaws.services.ec2.model.DescribeSecurityGroupsRequest;
+import com.amazonaws.services.ec2.model.DescribeSecurityGroupsResult;
+import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
+import com.amazonaws.services.ec2.model.CreateSecurityGroupResult;
+
 import com.amazonaws.services.ec2.model.ReleaseAddressRequest;
 import com.amazonaws.services.ec2.model.ReleaseAddressResult;
 import com.amazonaws.services.ec2.model.Address;
@@ -109,6 +121,8 @@ public class awsTest {
                         System.out.println(" 11. Associate Address   12. Describe Address");
                         System.out.println(" 13. Release Address  14. createKeyPair");
                         System.out.println(" 15. createKeyPair 16. deleteKeyPair");
+                        System.out.println(" 17. createSecurity Group 18. Describe security group ");
+                        System.out.println(" 19. delete Security group 20. Authorize Security Gruop ");
 
 
 			System.out.println(" 99. quit ");
@@ -195,6 +209,29 @@ public class awsTest {
                                         id=id_string.nextLine();
 					deleteKeyPair(id);
 					break;
+				case 17:
+					String group_name="", group_desc="", vpc_id="";
+					System.out.print("Enter the group name : ");
+                                        group_name=id_string.nextLine();
+					System.out.println("");
+					System.out.print("Type the description of the group : ");
+                                        group_desc=id_string.nextLine();
+					System.out.println("");
+					System.out.print("Enter the vpc id : ");
+                                        vpc_id=id_string.nextLine();					
+					CreateSecurityGroup(group_name, group_desc, vpc_id);
+					break;
+				case 18:
+				//	DescribrSecurityGroup();
+					break;
+				case 19:
+					System.out.print("Enter the key name you want to create:");
+                                        id=id_string.nextLine();
+				//	DeleteSecurityGroup();
+					break;
+				case 20:
+				//	AuthrizeSecurityGroup();
+					break;	
 				case 99:
 					System.out.println("end the Amazon AWS Control");
 					loop=false;
@@ -563,7 +600,51 @@ public class awsTest {
             "Successfully deleted key pair named %s", key_name);
     }
 
-	
+	public static void CreateSecurityGroup(String group_name, String group_desc, String vpc_id){
+
+
+
+        CreateSecurityGroupRequest create_request = new
+            CreateSecurityGroupRequest()
+                .withGroupName(group_name)
+                .withDescription(group_desc)
+                .withVpcId(vpc_id);
+
+        CreateSecurityGroupResult create_response =
+            ec2.createSecurityGroup(create_request);
+
+        System.out.printf(
+            "Successfully created security group named %s",
+            group_name);
+
+        IpRange ip_range = new IpRange()
+            .withCidrIp("0.0.0.0/0");
+
+        IpPermission ip_perm = new IpPermission()
+            .withIpProtocol("tcp")
+            .withToPort(80)
+            .withFromPort(80)
+            .withIpv4Ranges(ip_range);
+
+        IpPermission ip_perm2 = new IpPermission()
+            .withIpProtocol("tcp")
+            .withToPort(22)
+            .withFromPort(22)
+            .withIpv4Ranges(ip_range);
+
+        AuthorizeSecurityGroupIngressRequest auth_request = new
+            AuthorizeSecurityGroupIngressRequest()
+                .withGroupName(group_name)
+                .withIpPermissions(ip_perm, ip_perm2);
+
+        AuthorizeSecurityGroupIngressResult auth_response =
+            ec2.authorizeSecurityGroupIngress(auth_request);
+
+        System.out.printf(
+            "Successfully added ingress policy to security group %s",
+            group_name);
+    }
+		
 	
 	
 

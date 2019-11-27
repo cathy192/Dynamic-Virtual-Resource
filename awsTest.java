@@ -41,7 +41,8 @@ import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.AllocateAddressRequest;
 import com.amazonaws.services.ec2.model.AllocateAddressResult;
 import com.amazonaws.services.ec2.model.AssociateAddressRequest;
-
+import com.amazonaws.services.ec2.model.DescribeKeyPairsResult;
+import com.amazonaws.services.ec2.model.KeyPairInfo;
 import com.amazonaws.services.ec2.model.AssociateAddressResult;
 import com.amazonaws.services.ec2.model.CreateKeyPairRequest;
 import com.amazonaws.services.ec2.model.CreateKeyPairResult;
@@ -185,7 +186,7 @@ public class awsTest {
 					createKeyPair(id);
 					break;
 				case 15:
-				//	describeKeyPair();
+					describeKeyPair();
 					break;
 				case 16:
 					System.out.print("Enter the key want to delete:");
@@ -535,7 +536,23 @@ public class awsTest {
     }
 	
 
+	public static void describeKeyPair(){
 
+	System.out.println("key list...");
+	DescribeKeyPairsResult response = ec2.describeKeyPairs();
+
+        for(KeyPairInfo key_pair : response.getKeyPairs()) {
+            System.out.printf(
+                "[name]:  %15s,	" +
+                "[fingerprint]: %s",
+                key_pair.getKeyName(),
+                key_pair.getKeyFingerprint());
+        	System.out.println();
+	}
+    }
+	
+	
+	
 
 
 	

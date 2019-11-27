@@ -43,6 +43,9 @@ import com.amazonaws.services.ec2.model.AllocateAddressResult;
 import com.amazonaws.services.ec2.model.AssociateAddressRequest;
 import com.amazonaws.services.ec2.model.AssociateAddressResult;
 import com.amazonaws.services.ec2.model.DomainType;
+
+import com.amazonaws.services.ec2.model.Address;
+import com.amazonaws.services.ec2.model.DescribeAddressesResult;
 import com.amazonaws.services.ec2.model.UnmonitorInstancesRequest;
 public class awsTest {
 	/*
@@ -96,7 +99,7 @@ public class awsTest {
 			System.out.println(" 5. stop instance 6. create instance ");
 			System.out.println(" 7. reboot instance 8. list images ");
 		        System.out.println(" 9. monitoring instance 10. unmonitoring instance ");
-                        System.out.println(" 11.AssociateAddress ");
+                        System.out.println(" 11.Associate Address   12. Describe Address");
 
 
 			System.out.println(" 99. quit ");
@@ -159,6 +162,9 @@ public class awsTest {
 					System.out.print("Enter the instance id:");
                                         id=id_string.nextLine();
 					allocateAddress(id);
+					break;
+				case 12:
+					describeAddress();
 					break;
 				case 99:
 					System.out.println("end the Amazon AWS Control");
@@ -459,6 +465,23 @@ public class awsTest {
     }			
 
 
+	public static void describeAddress(){
+	
+	DescribeAddressesResult response = ec2.describeAddresses();
+	for(Address address : response.getAddresses()) {
+ 	   System.out.printf(
+            "[public IP]: %s,	" +
+            "[domain]: %s	, " +
+            "[allocation id]: %s,	" +
+            "[NIC id]: %s",
+            address.getPublicIp(),
+            address.getDomain(),
+            address.getAllocationId(),
+            address.getNetworkInterfaceId());
+}
+
+
+}
 
 
 

@@ -44,6 +44,8 @@ import com.amazonaws.services.ec2.model.AssociateAddressRequest;
 import com.amazonaws.services.ec2.model.DescribeKeyPairsResult;
 import com.amazonaws.services.ec2.model.KeyPairInfo;
 import com.amazonaws.services.ec2.model.AssociateAddressResult;
+import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
+import com.amazonaws.services.ec2.model.DeleteKeyPairResult;
 import com.amazonaws.services.ec2.model.CreateKeyPairRequest;
 import com.amazonaws.services.ec2.model.CreateKeyPairResult;
 import com.amazonaws.services.ec2.model.DomainType;
@@ -189,9 +191,9 @@ public class awsTest {
 					describeKeyPair();
 					break;
 				case 16:
-					System.out.print("Enter the key want to delete:");
+					System.out.print("Enter the key name want to delete:");
                                         id=id_string.nextLine();
-				//	deleteKeyPair(id);
+					deleteKeyPair(id);
 					break;
 				case 99:
 					System.out.println("end the Amazon AWS Control");
@@ -550,6 +552,17 @@ public class awsTest {
         	System.out.println();
 	}
     }
+	public static void deleteKeyPair(String key_name){
+
+	 DeleteKeyPairRequest request = new DeleteKeyPairRequest()
+            .withKeyName(key_name);
+
+        DeleteKeyPairResult response = ec2.deleteKeyPair(request);
+
+        System.out.printf(
+            "Successfully deleted key pair named %s", key_name);
+    }
+
 	
 	
 	

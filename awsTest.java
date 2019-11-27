@@ -41,7 +41,10 @@ import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.AllocateAddressRequest;
 import com.amazonaws.services.ec2.model.AllocateAddressResult;
 import com.amazonaws.services.ec2.model.AssociateAddressRequest;
+
 import com.amazonaws.services.ec2.model.AssociateAddressResult;
+import com.amazonaws.services.ec2.model.CreateKeyPairRequest;
+import com.amazonaws.services.ec2.model.CreateKeyPairResult;
 import com.amazonaws.services.ec2.model.DomainType;
 import com.amazonaws.services.ec2.model.ReleaseAddressRequest;
 import com.amazonaws.services.ec2.model.ReleaseAddressResult;
@@ -101,7 +104,8 @@ public class awsTest {
 			System.out.println(" 7. reboot instance 8. list images ");
 		        System.out.println(" 9. monitoring instance 10. unmonitoring instance ");
                         System.out.println(" 11. Associate Address   12. Describe Address");
-                        System.out.println(" 13. Release Address");
+                        System.out.println(" 13. Release Address  14. createKeyPair");
+                        System.out.println(" 15. createKeyPair 16. deleteKeyPair");
 
 
 			System.out.println(" 99. quit ");
@@ -173,6 +177,20 @@ public class awsTest {
 					System.out.print("Enter the address id:");
                                         id=id_string.nextLine();
 					releaseAddress(id);
+					break;
+
+				case 14:
+					System.out.print("Enter the key name you want to create:");
+                                        id=id_string.nextLine();
+					createKeyPair(id);
+					break;
+				case 15:
+				//	describeKeyPair();
+					break;
+				case 16:
+					System.out.print("Enter the key want to delete:");
+                                        id=id_string.nextLine();
+				//	deleteKeyPair(id);
 					break;
 				case 99:
 					System.out.println("end the Amazon AWS Control");
@@ -503,6 +521,18 @@ public class awsTest {
     }
 
 
+	public static void createKeyPair(String key_name){
+
+	
+         CreateKeyPairRequest request = new CreateKeyPairRequest()
+            .withKeyName(key_name);
+
+        CreateKeyPairResult response = ec2.createKeyPair(request);
+	System.out.println("");
+        System.out.printf(
+            "Successfully created key pair named %s",
+            key_name);
+    }
 	
 
 

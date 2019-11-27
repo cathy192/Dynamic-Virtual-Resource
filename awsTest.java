@@ -60,7 +60,8 @@ import com.amazonaws.services.ec2.model.DescribeSecurityGroupsRequest;
 import com.amazonaws.services.ec2.model.DescribeSecurityGroupsResult;
 import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
 import com.amazonaws.services.ec2.model.CreateSecurityGroupResult;
-
+import com.amazonaws.services.ec2.model.DeleteSecurityGroupRequest;
+import com.amazonaws.services.ec2.model.DeleteSecurityGroupResult;
 import com.amazonaws.services.ec2.model.ReleaseAddressRequest;
 import com.amazonaws.services.ec2.model.ReleaseAddressResult;
 import com.amazonaws.services.ec2.model.Address;
@@ -227,9 +228,9 @@ public class awsTest {
 					DescribrSecurityGroup(id);
 					break;
 				case 19:
-					System.out.print("Enter the key name you want to create:");
+					System.out.print("Enter the group id you want to delete:");
                                         id=id_string.nextLine();
-				//	DeleteSecurityGroup();
+					DeleteSecurityGroup(id);
 					break;
 				case 20:
 				//	AuthrizeSecurityGroup();
@@ -666,14 +667,26 @@ public class awsTest {
                 group.getGroupId(),
                 group.getVpcId(),
                 group.getDescription());
-        }
+        	}
     
+	}
+	public static void DeleteSecurityGroup(String group_id){
+
+	 DeleteSecurityGroupRequest request = new DeleteSecurityGroupRequest()
+            .withGroupId(group_id);
+
+        DeleteSecurityGroupResult response = ec2.deleteSecurityGroup(request);
+
+        System.out.printf(
+            "Successfully deleted security group with id %s", group_id);
+   	 }
 
 
-}
-
+	
 	
 	
 			
 }
+
+
 

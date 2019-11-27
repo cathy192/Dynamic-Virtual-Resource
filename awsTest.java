@@ -13,7 +13,7 @@ import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
 import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressResult;
 import com.amazonaws.services.ec2.model.IpPermission;
 import com.amazonaws.services.ec2.model.IpRange;
-
+import com.amazonaws.services.ec2.model.SecurityGroup;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.DryRunResult;
@@ -222,7 +222,9 @@ public class awsTest {
 					CreateSecurityGroup(group_name, group_desc, vpc_id);
 					break;
 				case 18:
-				//	DescribrSecurityGroup();
+					System.out.print("Enter the group id want to know:");
+                                        id=id_string.nextLine();
+					DescribrSecurityGroup(id);
 					break;
 				case 19:
 					System.out.print("Enter the key name you want to create:");
@@ -647,7 +649,28 @@ public class awsTest {
 		
 	
 	
+	public static void DescribrSecurityGroup(String group_id){
 
+	DescribeSecurityGroupsRequest request =
+            new DescribeSecurityGroupsRequest()
+                .withGroupIds(group_id);
+
+        DescribeSecurityGroupsResult response =
+            ec2.describeSecurityGroups(request);
+
+        for(SecurityGroup group : response.getSecurityGroups()) {
+            System.out.printf(
+                "[id]:  %s, " +
+                "[vpc id]: %s " +
+                "[description]: %s",
+                group.getGroupId(),
+                group.getVpcId(),
+                group.getDescription());
+        }
+    
+
+
+}
 
 	
 	

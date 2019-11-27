@@ -38,6 +38,7 @@ import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.MonitorInstancesRequest;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Reservation;
+import com.amazonaws.services.ec2.model.UnmonitorInstancesRequest;
 public class awsTest {
 	/*
 	 * Cloud Computing, Data Computing Laboratory
@@ -89,7 +90,7 @@ public class awsTest {
 			System.out.println(" 3. start instance 4. available regions ");
 			System.out.println(" 5. stop instance 6. create instance ");
 			System.out.println(" 7. reboot instance 8. list images ");
-		        System.out.println(" 9. monitoring instance  ");
+		        System.out.println(" 9. monitoring instance 10. unmonitoring instance ");
 
 			System.out.println(" 99. quit ");
 			System.out.println("------------------------------------------------------------");
@@ -141,6 +142,12 @@ public class awsTest {
                                         id=id_string.nextLine();
 					monitorInstance(id);
 					break;
+				case 10:
+					System.out.print("Enter the instance id:");
+                                        id=id_string.nextLine();
+                                        unmonitorInstance(id);
+                                        break;
+
 
 				case 99:
 					System.out.println("end the Amazon AWS Control");
@@ -382,7 +389,37 @@ public class awsTest {
     }
 
 
+	public static void unmonitorInstance(String instance_id){
 
+
+	   DryRunSupportedRequest<UnmonitorInstancesRequest> dry_request =
+            () -> {
+            UnmonitorInstancesRequest request = new UnmonitorInstancesRequest()
+                .withInstanceIds(instance_id);
+
+            return request.getDryRunRequest();
+        };
+
+        DryRunResult dry_response = ec2.dryRun(dry_request);
+
+        if (!dry_response.isSuccessful()) {
+            System.out.printf(
+                "Failed dry run to disable monitoring on instance %s",
+                instance_id);
+
+            throw dry_response.getDryRunResponse();
+        }
+
+        UnmonitorInstancesRequest request = new UnmonitorInstancesRequest()
+            .withInstanceIds(instance_id);
+
+        ec2.unmonitorInstances(request);
+
+        System.out.printf(
+            "Successfully disabled monitoring for instance %s",
+            instance_id);
+
+		}
 
 
 
